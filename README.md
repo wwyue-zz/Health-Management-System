@@ -13,92 +13,76 @@ Additionally, the system integrates an **AI Personalized Recommendation** module
 
 Based on the database design (`ry-vue.sql`), the system includes the following core functional units:
 
-### 1. 👴 Patient Profile Management
-* **Table**: `tb_hypertension_patients`
-* **Function**: Manages basic information for elderly hypertension patients.
-* **Key Fields**:
-    * `bmi`: Automatic calculation of the Body Mass Index.
-    * `family_history`: Records family history of hypertension.
-    * `complication`: Records complications (e.g., Coronary Heart Disease, Stroke).
-    * `admission_date`: Manages admission and filing dates.
+### 1. 🗂️ Patient Profile Center
+- **Comprehensive Management**: Manages basic patient info (Name, ID, Contact).
+- **Smart Calculation**: Automatically calculates **BMI** based on height and weight.
+- **History Tracking**: Detailed records of family history and complications (e.g., CHD, Stroke).
 
-### 2. 📉 Vital Signs Monitoring (BP Records)
-* **Table**: `tb_health_records`
-* **Function**: Logs daily blood pressure and vital signs data.
-* **Key Fields**:
-    * `systolic_bp` / `diastolic_bp`: Records systolic and diastolic pressure.
-    * `bp_level`: Automatic BP grading (Normal / Stage 1 / Stage 2 / Stage 3 Hypertension).
-    * `heart_rate`: Monitors heart rate.
-    * `abnormal_symptoms`: Logs any abnormal symptoms observed.
+### 2. 📈 Vital Signs Monitoring
+- **Data Logging**: Records Systolic BP, Diastolic BP, and Heart Rate.
+- **Auto-Grading**: Automatically classifies hypertension levels (Normal / Stage 1 / Stage 2 / Stage 3).
+- **Trend Analysis**: Visualizes recent blood pressure trends using **ECharts Line Charts**.
 
 ### 3. 🥗 Lifestyle Intervention
-* **Table**: `tb_lifestyle_records`
-* **Function**: Tracks and evaluates patient lifestyle habits to support non-pharmacological treatment.
-* **Key Dimensions**:
-    * Diet Plan (`diet_plan`): e.g., Low Salt, Low Fat diet.
-    * Salt Intake (`salt_intake`): Precise monitoring of daily salt consumption.
-    * Tracks Exercise Frequency, Smoking Status, Alcohol Consumption, and Sleep Quality.
+- **Multi-dimensional Assessment**: Tracks diet plans (Low Salt/Fat), exercise frequency, smoking/drinking status, and sleep quality.
+- **Health Portrait**: Generates a health index model using a **Radar Chart**.
 
 ### 4. 💊 Medication Management
-* **Table**: `tb_medication_records`
-* **Function**: Tracks the usage and efficacy of antihypertensive medication.
-* **Key Fields**:
-    * `drug_name`: Name of the medication.
-    * `frequency`: Dosage frequency (e.g., Once daily, Twice daily).
-    * `effect`: Efficacy evaluation (Effective / Ineffective / Side Effects).
-    * `side_effects`: Detailed records of any adverse drug reactions.
+- **Prescription Tracking**: Records drug names, dosages, and frequencies.
+- **Effectiveness Feedback**: Tracks medication outcomes (Effective/Side Effects) and adverse reactions.
 
 ### 5. 📋 Follow-up & Risk Assessment
-* **Table**: `tb_follow_up_records`
-* **Function**: Records regular doctor-patient follow-ups and cardiovascular risk assessments.
-* **Key Fields**:
-    * `risk_assessment`: Determination of risk level (Low Risk / Medium Risk / High Risk).
-    * `doctor_assessment`: Doctor's evaluation notes.
-    * `referral`: Referral suggestions if transfer is needed.
+- **Regular Follow-ups**: Logs doctor-patient follow-up details and medical advice.
+- **Risk Grading**: Automatically tags cardiovascular risk levels (🔴 High / 🟠 Medium / 🟢 Low).
 
-### 6. 🤖 AI Consultant
-* **Frontend**: `ai/chat/index`
-* **Function**: Generates personalized health advice based on patient data.
-* **Interaction**: Provides an intelligent chat interface to offer targeted diet and exercise guidance.
-
+### 6. 🤖 AI Intelligent Consultant
+- **Smart Consultation**: Integrated AI chat interface generating personalized diet and exercise advice based on patient health data.
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend
-- **Core Framework**: Spring Boot
-- **Persistence**: MyBatis / MyBatis Plus
-- **Database**: MySQL 8.0 (Charset `utf8mb4`)
-- **Scheduling**: Quartz (for scheduled reminders)
-- **Security**: Spring Security
-
-### Frontend
-- **Framework**: Vue.js
-- **UI Library**: Element UI / Element Plus
-- **Visualization**: ECharts (for BP Trend Lines and Health Radar Charts)
+| Module | Technology | Description |
+| :--- | :--- | :--- |
+| **Backend** | Spring Boot 2.5+ | Core Framework |
+| | MyBatis Plus | ORM / Persistence Layer |
+| | MySQL 8.0 | Relational Database |
+| | Redis | Caching & Session Management |
+| | JWT | Authentication |
+| **Frontend** | Vue 3 | Progressive JavaScript Framework |
+| | Element Plus | UI Component Library |
+| | Apache ECharts 5 | Data Visualization |
+| | Vite | Frontend Build Tool |
 
 ---
 
 ## ⚡️ Quick Start
 
-### 1. Database Setup
-1.  Create a database named `ry-vue`.
-2.  Import the SQL scripts (in order):
-    - `ry-vue.sql` (Core structure and data)
-    - `patientsMenu.sql` (Incremental menu data)
+### 1. Prerequisites
+- **JDK:** 1.8+
+- **MySQL:** 8.0 (Recommended) or 5.7
+- **Redis:** 3.0+
+- **Node.js:** 14+ / 16+
 
-### 2. Backend Startup
-1.  Open the project in IDEA.
-2.  Update `application-druid.yml` with your database connection details.
-3.  Run the main class `RuoYiApplication`.
+### 2. Database Setup
+1. Create a database named `ry-vue` (Charset: `utf8mb4`).
+2. Import SQL scripts in order:
+   - `sql/ry_2025xxxx.sql` (Base Structure)
+   - `ry-vue.sql` (Business Data)
 
-### 3. Frontend Startup
+### 3. Backend Startup
+1. Open the `Doctor` folder in IntelliJ IDEA.
+2. Update `doctor-admin/src/main/resources/application-druid.yml` with your database credentials.
+3. Run `RuoYiApplication.java`.
+
+### 4. Frontend Startup
 ```bash
 # Navigate to frontend directory
-cd ruoyi-ui
+cd RuoYi-Vue3
 
 # Install dependencies
 npm install --registry=[https://registry.npmmirror.com](https://registry.npmmirror.com)
 
 # Start the server
 npm run dev
+
+
