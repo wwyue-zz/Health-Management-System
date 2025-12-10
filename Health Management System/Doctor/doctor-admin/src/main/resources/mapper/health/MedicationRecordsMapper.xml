@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doctor.health.mapper.MedicationRecordsMapper">
+    
+    <resultMap type="MedicationRecords" id="MedicationRecordsResult">
+        <result property="medId"    column="med_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="drugName"    column="drug_name"    />
+        <result property="dosage"    column="dosage"    />
+        <result property="frequency"    column="frequency"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="effect"    column="effect"    />
+        <result property="sideEffects"    column="side_effects"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectMedicationRecordsVo">
+        select med_id, patient_id, drug_name, dosage, frequency, start_date, end_date, effect, side_effects, name from tb_medication_records
+    </sql>
+
+    <select id="selectMedicationRecordsList" parameterType="MedicationRecords" resultMap="MedicationRecordsResult">
+        <include refid="selectMedicationRecordsVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="drugName != null  and drugName != ''"> and drug_name like concat('%', #{drugName}, '%')</if>
+            <if test="dosage != null  and dosage != ''"> and dosage = #{dosage}</if>
+            <if test="frequency != null  and frequency != ''"> and frequency = #{frequency}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="effect != null  and effect != ''"> and effect = #{effect}</if>
+            <if test="sideEffects != null  and sideEffects != ''"> and side_effects = #{sideEffects}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectMedicationRecordsByMedId" parameterType="Long" resultMap="MedicationRecordsResult">
+        <include refid="selectMedicationRecordsVo"/>
+        where med_id = #{medId}
+    </select>
+
+    <insert id="insertMedicationRecords" parameterType="MedicationRecords" useGeneratedKeys="true" keyProperty="medId">
+        insert into tb_medication_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">patient_id,</if>
+            <if test="drugName != null and drugName != ''">drug_name,</if>
+            <if test="dosage != null and dosage != ''">dosage,</if>
+            <if test="frequency != null">frequency,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="effect != null">effect,</if>
+            <if test="sideEffects != null">side_effects,</if>
+            <if test="name != null and name != ''">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">#{patientId},</if>
+            <if test="drugName != null and drugName != ''">#{drugName},</if>
+            <if test="dosage != null and dosage != ''">#{dosage},</if>
+            <if test="frequency != null">#{frequency},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="effect != null">#{effect},</if>
+            <if test="sideEffects != null">#{sideEffects},</if>
+            <if test="name != null and name != ''">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMedicationRecords" parameterType="MedicationRecords">
+        update tb_medication_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="drugName != null and drugName != ''">drug_name = #{drugName},</if>
+            <if test="dosage != null and dosage != ''">dosage = #{dosage},</if>
+            <if test="frequency != null">frequency = #{frequency},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="effect != null">effect = #{effect},</if>
+            <if test="sideEffects != null">side_effects = #{sideEffects},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+        </trim>
+        where med_id = #{medId}
+    </update>
+
+    <delete id="deleteMedicationRecordsByMedId" parameterType="Long">
+        delete from tb_medication_records where med_id = #{medId}
+    </delete>
+
+    <delete id="deleteMedicationRecordsByMedIds" parameterType="String">
+        delete from tb_medication_records where med_id in 
+        <foreach item="medId" collection="array" open="(" separator="," close=")">
+            #{medId}
+        </foreach>
+    </delete>
+</mapper>

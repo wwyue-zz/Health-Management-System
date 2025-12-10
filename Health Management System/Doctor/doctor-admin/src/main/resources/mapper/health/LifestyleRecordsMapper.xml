@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doctor.health.mapper.LifestyleRecordsMapper">
+    
+    <resultMap type="LifestyleRecords" id="LifestyleRecordsResult">
+        <result property="lifestyleId"    column="lifestyle_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="dietPlan"    column="diet_plan"    />
+        <result property="saltIntake"    column="salt_intake"    />
+        <result property="exerciseFrequency"    column="exercise_frequency"    />
+        <result property="smokingStatus"    column="smoking_status"    />
+        <result property="alcoholIntake"    column="alcohol_intake"    />
+        <result property="sleepQuality"    column="sleep_quality"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectLifestyleRecordsVo">
+        select lifestyle_id, patient_id, record_date, diet_plan, salt_intake, exercise_frequency, smoking_status, alcohol_intake, sleep_quality, name from tb_lifestyle_records
+    </sql>
+
+    <select id="selectLifestyleRecordsList" parameterType="LifestyleRecords" resultMap="LifestyleRecordsResult">
+        <include refid="selectLifestyleRecordsVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="recordDate != null "> and record_date = #{recordDate}</if>
+            <if test="dietPlan != null  and dietPlan != ''"> and diet_plan = #{dietPlan}</if>
+            <if test="saltIntake != null  and saltIntake != ''"> and salt_intake = #{saltIntake}</if>
+            <if test="exerciseFrequency != null  and exerciseFrequency != ''"> and exercise_frequency = #{exerciseFrequency}</if>
+            <if test="smokingStatus != null  and smokingStatus != ''"> and smoking_status = #{smokingStatus}</if>
+            <if test="alcoholIntake != null  and alcoholIntake != ''"> and alcohol_intake = #{alcoholIntake}</if>
+            <if test="sleepQuality != null  and sleepQuality != ''"> and sleep_quality = #{sleepQuality}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectLifestyleRecordsByLifestyleId" parameterType="Long" resultMap="LifestyleRecordsResult">
+        <include refid="selectLifestyleRecordsVo"/>
+        where lifestyle_id = #{lifestyleId}
+    </select>
+
+    <insert id="insertLifestyleRecords" parameterType="LifestyleRecords" useGeneratedKeys="true" keyProperty="lifestyleId">
+        insert into tb_lifestyle_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">patient_id,</if>
+            <if test="recordDate != null">record_date,</if>
+            <if test="dietPlan != null">diet_plan,</if>
+            <if test="saltIntake != null">salt_intake,</if>
+            <if test="exerciseFrequency != null">exercise_frequency,</if>
+            <if test="smokingStatus != null">smoking_status,</if>
+            <if test="alcoholIntake != null">alcohol_intake,</if>
+            <if test="sleepQuality != null">sleep_quality,</if>
+            <if test="name != null and name != ''">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">#{patientId},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="dietPlan != null">#{dietPlan},</if>
+            <if test="saltIntake != null">#{saltIntake},</if>
+            <if test="exerciseFrequency != null">#{exerciseFrequency},</if>
+            <if test="smokingStatus != null">#{smokingStatus},</if>
+            <if test="alcoholIntake != null">#{alcoholIntake},</if>
+            <if test="sleepQuality != null">#{sleepQuality},</if>
+            <if test="name != null and name != ''">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLifestyleRecords" parameterType="LifestyleRecords">
+        update tb_lifestyle_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="dietPlan != null">diet_plan = #{dietPlan},</if>
+            <if test="saltIntake != null">salt_intake = #{saltIntake},</if>
+            <if test="exerciseFrequency != null">exercise_frequency = #{exerciseFrequency},</if>
+            <if test="smokingStatus != null">smoking_status = #{smokingStatus},</if>
+            <if test="alcoholIntake != null">alcohol_intake = #{alcoholIntake},</if>
+            <if test="sleepQuality != null">sleep_quality = #{sleepQuality},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+        </trim>
+        where lifestyle_id = #{lifestyleId}
+    </update>
+
+    <delete id="deleteLifestyleRecordsByLifestyleId" parameterType="Long">
+        delete from tb_lifestyle_records where lifestyle_id = #{lifestyleId}
+    </delete>
+
+    <delete id="deleteLifestyleRecordsByLifestyleIds" parameterType="String">
+        delete from tb_lifestyle_records where lifestyle_id in 
+        <foreach item="lifestyleId" collection="array" open="(" separator="," close=")">
+            #{lifestyleId}
+        </foreach>
+    </delete>
+</mapper>

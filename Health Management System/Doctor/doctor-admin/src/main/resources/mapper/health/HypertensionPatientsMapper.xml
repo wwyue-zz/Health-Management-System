@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doctor.health.mapper.HypertensionPatientsMapper">
+    
+    <resultMap type="HypertensionPatients" id="HypertensionPatientsResult">
+        <result property="patientId"    column="patient_id"    />
+        <result property="name"    column="name"    />
+        <result property="gender"    column="gender"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="address"    column="address"    />
+        <result property="height"    column="height"    />
+        <result property="weight"    column="weight"    />
+        <result property="bmi"    column="bmi"    />
+        <result property="familyHistory"    column="family_history"    />
+        <result property="complication"    column="complication"    />
+        <result property="admissionDate"    column="admission_date"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectHypertensionPatientsVo">
+        select patient_id, name, gender, id_card, birthday, contact_phone, address, height, weight, bmi, family_history, complication, admission_date, created_at, updated_at from tb_hypertension_patients
+    </sql>
+
+    <select id="selectHypertensionPatientsList" parameterType="HypertensionPatients" resultMap="HypertensionPatientsResult">
+        <include refid="selectHypertensionPatientsVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="bmi != null "> and bmi = #{bmi}</if>
+            <if test="familyHistory != null  and familyHistory != ''"> and family_history = #{familyHistory}</if>
+            <if test="complication != null  and complication != ''"> and complication = #{complication}</if>
+            <if test="admissionDate != null "> and admission_date = #{admissionDate}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectHypertensionPatientsByPatientId" parameterType="Long" resultMap="HypertensionPatientsResult">
+        <include refid="selectHypertensionPatientsVo"/>
+        where patient_id = #{patientId}
+    </select>
+
+    <insert id="insertHypertensionPatients" parameterType="HypertensionPatients" useGeneratedKeys="true" keyProperty="patientId">
+        insert into tb_hypertension_patients
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="gender != null and gender != ''">gender,</if>
+            <if test="idCard != null and idCard != ''">id_card,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone,</if>
+            <if test="address != null">address,</if>
+            <if test="height != null">height,</if>
+            <if test="weight != null">weight,</if>
+            <if test="bmi != null">bmi,</if>
+            <if test="familyHistory != null">family_history,</if>
+            <if test="complication != null">complication,</if>
+            <if test="admissionDate != null">admission_date,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="gender != null and gender != ''">#{gender},</if>
+            <if test="idCard != null and idCard != ''">#{idCard},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="contactPhone != null and contactPhone != ''">#{contactPhone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="height != null">#{height},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="bmi != null">#{bmi},</if>
+            <if test="familyHistory != null">#{familyHistory},</if>
+            <if test="complication != null">#{complication},</if>
+            <if test="admissionDate != null">#{admissionDate},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHypertensionPatients" parameterType="HypertensionPatients">
+        update tb_hypertension_patients
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone = #{contactPhone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="familyHistory != null">family_history = #{familyHistory},</if>
+            <if test="complication != null">complication = #{complication},</if>
+            <if test="admissionDate != null">admission_date = #{admissionDate},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where patient_id = #{patientId}
+    </update>
+
+    <delete id="deleteHypertensionPatientsByPatientId" parameterType="Long">
+        delete from tb_hypertension_patients where patient_id = #{patientId}
+    </delete>
+
+    <delete id="deleteHypertensionPatientsByPatientIds" parameterType="String">
+        delete from tb_hypertension_patients where patient_id in 
+        <foreach item="patientId" collection="array" open="(" separator="," close=")">
+            #{patientId}
+        </foreach>
+    </delete>
+</mapper>

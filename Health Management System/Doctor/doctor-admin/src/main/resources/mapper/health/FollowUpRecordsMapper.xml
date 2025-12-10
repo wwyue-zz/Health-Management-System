@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doctor.health.mapper.FollowUpRecordsMapper">
+    
+    <resultMap type="FollowUpRecords" id="FollowUpRecordsResult">
+        <result property="followId"    column="follow_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="followDate"    column="follow_date"    />
+        <result property="nextDate"    column="next_date"    />
+        <result property="doctorNotes"    column="doctor_notes"    />
+        <result property="riskAssessment"    column="risk_assessment"    />
+        <result property="referral"    column="referral"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectFollowUpRecordsVo">
+        select follow_id, patient_id, follow_date, next_date, doctor_notes, risk_assessment, referral, name from tb_follow_up_records
+    </sql>
+
+    <select id="selectFollowUpRecordsList" parameterType="FollowUpRecords" resultMap="FollowUpRecordsResult">
+        <include refid="selectFollowUpRecordsVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="followDate != null "> and follow_date = #{followDate}</if>
+            <if test="nextDate != null "> and next_date = #{nextDate}</if>
+            <if test="doctorNotes != null  and doctorNotes != ''"> and doctor_notes = #{doctorNotes}</if>
+            <if test="riskAssessment != null  and riskAssessment != ''"> and risk_assessment = #{riskAssessment}</if>
+            <if test="referral != null  and referral != ''"> and referral = #{referral}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectFollowUpRecordsByFollowId" parameterType="Long" resultMap="FollowUpRecordsResult">
+        <include refid="selectFollowUpRecordsVo"/>
+        where follow_id = #{followId}
+    </select>
+
+    <insert id="insertFollowUpRecords" parameterType="FollowUpRecords" useGeneratedKeys="true" keyProperty="followId">
+        insert into tb_follow_up_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">patient_id,</if>
+            <if test="followDate != null">follow_date,</if>
+            <if test="nextDate != null">next_date,</if>
+            <if test="doctorNotes != null">doctor_notes,</if>
+            <if test="riskAssessment != null">risk_assessment,</if>
+            <if test="referral != null">referral,</if>
+            <if test="name != null and name != ''">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">#{patientId},</if>
+            <if test="followDate != null">#{followDate},</if>
+            <if test="nextDate != null">#{nextDate},</if>
+            <if test="doctorNotes != null">#{doctorNotes},</if>
+            <if test="riskAssessment != null">#{riskAssessment},</if>
+            <if test="referral != null">#{referral},</if>
+            <if test="name != null and name != ''">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFollowUpRecords" parameterType="FollowUpRecords">
+        update tb_follow_up_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="followDate != null">follow_date = #{followDate},</if>
+            <if test="nextDate != null">next_date = #{nextDate},</if>
+            <if test="doctorNotes != null">doctor_notes = #{doctorNotes},</if>
+            <if test="riskAssessment != null">risk_assessment = #{riskAssessment},</if>
+            <if test="referral != null">referral = #{referral},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+        </trim>
+        where follow_id = #{followId}
+    </update>
+
+    <delete id="deleteFollowUpRecordsByFollowId" parameterType="Long">
+        delete from tb_follow_up_records where follow_id = #{followId}
+    </delete>
+
+    <delete id="deleteFollowUpRecordsByFollowIds" parameterType="String">
+        delete from tb_follow_up_records where follow_id in 
+        <foreach item="followId" collection="array" open="(" separator="," close=")">
+            #{followId}
+        </foreach>
+    </delete>
+</mapper>

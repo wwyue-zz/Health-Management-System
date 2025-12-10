@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doctor.health.mapper.HealthRecordsMapper">
+    
+    <resultMap type="HealthRecords" id="HealthRecordsResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="systolicBp"    column="systolic_bp"    />
+        <result property="diastolicBp"    column="diastolic_bp"    />
+        <result property="bpLevel"    column="bp_level"    />
+        <result property="heartRate"    column="heart_rate"    />
+        <result property="notes"    column="notes"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectHealthRecordsVo">
+        select record_id, patient_id, record_date, systolic_bp, diastolic_bp, bp_level, heart_rate, notes, name from tb_health_records
+    </sql>
+
+    <select id="selectHealthRecordsList" parameterType="HealthRecords" resultMap="HealthRecordsResult">
+        <include refid="selectHealthRecordsVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="recordDate != null "> and record_date = #{recordDate}</if>
+            <if test="systolicBp != null "> and systolic_bp = #{systolicBp}</if>
+            <if test="diastolicBp != null "> and diastolic_bp = #{diastolicBp}</if>
+            <if test="bpLevel != null  and bpLevel != ''"> and bp_level = #{bpLevel}</if>
+            <if test="heartRate != null "> and heart_rate = #{heartRate}</if>
+            <if test="notes != null  and notes != ''"> and notes = #{notes}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectHealthRecordsByRecordId" parameterType="Long" resultMap="HealthRecordsResult">
+        <include refid="selectHealthRecordsVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertHealthRecords" parameterType="HealthRecords" useGeneratedKeys="true" keyProperty="recordId">
+        insert into tb_health_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">patient_id,</if>
+            <if test="recordDate != null">record_date,</if>
+            <if test="systolicBp != null">systolic_bp,</if>
+            <if test="diastolicBp != null">diastolic_bp,</if>
+            <if test="bpLevel != null">bp_level,</if>
+            <if test="heartRate != null">heart_rate,</if>
+            <if test="notes != null">notes,</if>
+            <if test="name != null and name != ''">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">#{patientId},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="systolicBp != null">#{systolicBp},</if>
+            <if test="diastolicBp != null">#{diastolicBp},</if>
+            <if test="bpLevel != null">#{bpLevel},</if>
+            <if test="heartRate != null">#{heartRate},</if>
+            <if test="notes != null">#{notes},</if>
+            <if test="name != null and name != ''">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHealthRecords" parameterType="HealthRecords">
+        update tb_health_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="systolicBp != null">systolic_bp = #{systolicBp},</if>
+            <if test="diastolicBp != null">diastolic_bp = #{diastolicBp},</if>
+            <if test="bpLevel != null">bp_level = #{bpLevel},</if>
+            <if test="heartRate != null">heart_rate = #{heartRate},</if>
+            <if test="notes != null">notes = #{notes},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteHealthRecordsByRecordId" parameterType="Long">
+        delete from tb_health_records where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteHealthRecordsByRecordIds" parameterType="String">
+        delete from tb_health_records where record_id in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doctor.health.mapper.HealthMapper">
+    
+    <resultMap type="Health" id="HealthResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="livestyle"    column="livestyle"    />
+        <result property="health"    column="health"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHealthVo">
+        select id, name, livestyle, health, create_time, update_time from tb_health
+    </sql>
+
+    <select id="selectHealthList" parameterType="Health" resultMap="HealthResult">
+        <include refid="selectHealthVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="livestyle != null "> and livestyle = #{livestyle}</if>
+            <if test="health != null "> and health = #{health}</if>
+        </where>
+    </select>
+    
+    <select id="selectHealthById" parameterType="Long" resultMap="HealthResult">
+        <include refid="selectHealthVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHealth" parameterType="Health" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_health
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="livestyle != null">livestyle,</if>
+            <if test="health != null">health,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="livestyle != null">#{livestyle},</if>
+            <if test="health != null">#{health},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHealth" parameterType="Health">
+        update tb_health
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="livestyle != null">livestyle = #{livestyle},</if>
+            <if test="health != null">health = #{health},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHealthById" parameterType="Long">
+        delete from tb_health where id = #{id}
+    </delete>
+
+    <delete id="deleteHealthByIds" parameterType="String">
+        delete from tb_health where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
